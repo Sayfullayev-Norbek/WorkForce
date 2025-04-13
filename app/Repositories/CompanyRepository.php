@@ -2,33 +2,61 @@
 
 namespace App\Repositories;
 
+use App\Interfaces\CompanyRepositoryInterface;
 use App\Models\Company;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
-class CompanyRepository
+class CompanyRepository implements CompanyRepositoryInterface
 {
-    public function all()
+    /**
+     * @return Collection
+     */
+    public function all(): Collection
     {
-        return Company::all();
+        return Company::query()->with('employees')->get();
     }
 
-    public function find($id)
+    /**
+     * @param int $id
+     * @return Company|Collection|Model|null
+     */
+    public function find(int $id): Model|Collection|Company|null
     {
         return Company::query()->findOrFail($id);
     }
 
-    public function create(array $data)
+    /**
+     * @param array $data
+     * @return Company|Model
+     */
+    public function create(array $data): Model|Company
     {
-        return Company::query()->create($data);
+        $data['password'] = Hash::make($data['password']);
+        $company = Company::query()->create($data);
+        $company->assignRole('company');
+
+        return $company;
     }
 
-    public function update($id, array $data)
+    /**
+     * @param int $id
+     * @param array $data
+     * @return Company|Collection|Model|null
+     */
+    public function update(int $id, array $data): Model|Collection|Company|null
     {
         $company = $this->find($id);
         $company->update($data);
         return $company;
     }
 
-    public function delete($id)
+    /**
+     * @param int $id
+     * @return bool|null
+     */
+    public function delete(int $id): ?bool
     {
         $company = $this->find($id);
         return $company->delete();

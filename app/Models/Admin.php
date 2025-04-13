@@ -2,15 +2,21 @@
 
 namespace App\Models;
 
+use Illuminate\Auth\Authenticatable as AuthenticableTrait;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class Admin extends Model
+class Admin extends Model implements Authenticatable, AuthorizableContract
 {
-    use HasRoles, HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasRoles, AuthenticableTrait, Authorizable;
+
+    protected string $guard_name = 'admin';
 
     protected $fillable = [
         'name',

@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Interfaces\CompanyRepositoryInterface;
-use Illuminate\Database\Eloquent\Collection;
 
 class CompanyService
 {

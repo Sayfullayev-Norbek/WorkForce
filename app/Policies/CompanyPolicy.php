@@ -2,65 +2,73 @@
 
 namespace App\Policies;
 
-use Illuminate\Auth\Access\Response;
 use App\Models\Company;
-use App\Models\User;
+use App\Models\Admin;
 
 class CompanyPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
+    public function viewAny($user): bool
     {
+        if ($user instanceof Admin) {
+            return $user->hasPermissionTo('company:view-any', 'admin');
+        }
+
+        if ($user instanceof Company) {
+            return $user->hasPermissionTo('company:view-any', 'company');
+        }
+
         return false;
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, Company $company): bool
+    public function view($user, Company $company): bool
     {
+        if ($user instanceof Admin) {
+            return $user->hasPermissionTo('company:view', 'admin');
+        }
+
+        if ($user instanceof Company) {
+            return $user->hasPermissionTo('company:view', 'company') && $user->id === $company->id;
+        }
+
         return false;
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
+    public function create($user): bool
     {
+        if ($user instanceof Admin) {
+            return $user->hasPermissionTo('company:create', 'admin');
+        }
+
+        if ($user instanceof Company) {
+            return $user->hasPermissionTo('company:create', 'company');
+        }
+
         return false;
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, Company $company): bool
+    public function update($user, Company $company): bool
     {
+        if ($user instanceof Admin) {
+            return $user->hasPermissionTo('company:update', 'admin');
+        }
+
+        if ($user instanceof Company) {
+            return $user->hasPermissionTo('company:update', 'company') && $user->id === $company->id;
+        }
+
         return false;
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, Company $company): bool
+    public function delete($user, Company $company): bool
     {
-        return false;
-    }
+        if ($user instanceof Admin) {
+            return $user->hasPermissionTo('company:delete', 'admin');
+        }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, Company $company): bool
-    {
-        return false;
-    }
+        if ($user instanceof Company) {
+            return $user->hasPermissionTo('company:delete', 'company') && $user->id === $company->id;
+        }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Company $company): bool
-    {
         return false;
     }
 }

@@ -4,45 +4,97 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Companies\StoreCompanyRequest;
 use App\Http\Requests\Companies\UpdateCompanyRequest;
+use App\Http\Resources\Company\CompanyResource;
+use App\Models\Company;
 use App\Services\CompanyService;
+use Exception;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\JsonResponse;
 
 class CompanyController extends Controller
 {
+
+    use AuthorizesRequests;
     protected $companyService;
 
     public function __construct(CompanyService $companyService)
     {
         $this->companyService = $companyService;
+        $this->authorizeResource(Company::class, 'company');
     }
 
-    public function index()
+    /**
+     * @return JsonResponse
+     */
+    public function index(): JsonResponse
     {
-        return response()->json($this->companyService->getAllCompanies());
+        try {
+            $result = $this->companyService->getAllCompanies();
+
+            return $this->response(CompanyResource::collection($result), 201);
+        } catch (Exception $exception) {
+            return $this->error($exception->getMessage(), $exception->getCode());
+        }
     }
 
-    public function show(int $id)
+    /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function show(int $id): JsonResponse
     {
-        return response()->json($this->companyService->getCompany($id));
+        try {
+            $result = $this->companyService->getCompany($id);
+
+            return $this->response(new CompanyResource($result), 201);
+        } catch (Exception $exception) {
+            return $this->error($exception->getMessage(), $exception->getCode());
+        }
     }
 
-    public function store(StoreCompanyRequest $request)
+    /**
+     * @param StoreCompanyRequest $request
+     * @return JsonResponse
+     */
+    public function store(StoreCompanyRequest $request): JsonResponse
     {
-        $company = $this->companyService->createCompany((array)$request);
+        try {
+            $result = $this->companyService->createCompany($request->validated());
 
-        return response()->json($company, 201);
+            return $this->response(new CompanyResource($result), 201);
+        } catch (Exception $exception) {
+            return $this->error($exception->getMessage(), $exception->getCode());
+        }
     }
 
-    public function update(UpdateCompanyRequest $request, int $id)
+    /**
+     * @param UpdateCompanyRequest $request
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function update(UpdateCompanyRequest $request, int $id): JsonResponse
     {
-        $company = $this->companyService->updateCompany($id, (array)$request);
+        try {
+            $result = $this->companyService->updateCompany($id, $request->validated());
 
-        return response()->json($company);
+            return $this->response(new CompanyResource($result), 201);
+        } catch (Exception $exception) {
+            return $this->error($exception->getMessage(), $exception->getCode());
+        }
     }
 
-    public function destroy(int $id)
+    /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function destroy(int $id): JsonResponse
     {
-        $this->companyService->deleteCompany($id);
+        try {
+            $this->companyService->deleteCompany($id);
 
-        return response()->json(null, 204);
+            return $this->success('Destroy',null, 201);
+        } catch (Exception $exception) {
+            return $this->error($exception->getMessage(), $exception->getCode());
+        }
     }
 }

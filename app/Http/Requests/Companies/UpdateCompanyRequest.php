@@ -27,7 +27,6 @@ class UpdateCompanyRequest extends FormRequest
             'first_name' => 'sometimes|string|max:255',
             'last_name' => 'sometimes|string|max:255',
             'middle_name' => 'sometimes|string|max:255',
-            'password' => 'required|min:8|confirmed',
             'address' => 'sometimes|string|max:255',
             'latitude' => 'sometimes|string',
             'longitude' => 'sometimes|string',

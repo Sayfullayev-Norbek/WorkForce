@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-use Database\Factories\CompanyFactory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Auth\Authenticatable as AuthenticableTrait;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Traits\HasRoles;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
  * Company
@@ -25,10 +27,11 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $phone
  * @property string $email
  */
-class Company extends Model
+class Company extends Model implements Authenticatable, AuthorizableContract
 {
-    /** @use HasFactory<CompanyFactory> */
-    use HasApiTokens, HasRoles, HasFactory;
+    use HasApiTokens, HasRoles, AuthenticableTrait, Authorizable;
+
+    protected string $guard_name = 'company';
 
     protected $fillable = [
         'company_name',
@@ -42,6 +45,7 @@ class Company extends Model
         'website',
         'phone',
         'email',
+        'password',
     ];
 
     /**
