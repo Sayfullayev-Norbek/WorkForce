@@ -13,7 +13,6 @@ use Illuminate\Http\JsonResponse;
 
 class CompanyController extends Controller
 {
-
     use AuthorizesRequests;
     protected $companyService;
 

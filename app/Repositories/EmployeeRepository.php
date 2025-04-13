@@ -6,6 +6,7 @@ use App\Models\Employee;
 use App\Interfaces\EmployeeRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
 class EmployeeRepository implements EmployeeRepositoryInterface
 {
@@ -34,8 +35,12 @@ class EmployeeRepository implements EmployeeRepositoryInterface
     public function create(array $data): Model|Employee
     {
         $data['company_id'] = auth()->user()->id;
+        $data['password'] = Hash::make($data['password']);
 
-        return Employee::query()->create($data);
+        $employee = Employee::query()->create($data);
+        $employee->assignRole('employee');
+
+        return $employee;
     }
 
     /**

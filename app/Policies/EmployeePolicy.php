@@ -24,11 +24,11 @@ class EmployeePolicy
     public function view($user, Employee $employee): bool
     {
         if ($user instanceof Admin) {
-            return $user->hasPermissionTo('employee:view');
+            return $user->hasPermissionTo('employee:view', 'admin');
         }
 
         if ($user instanceof Company) {
-            return $user->hasPermissionTo('employee:view') && $user->id === $employee->company_id;
+            return $user->hasPermissionTo('employee:view', 'company') && $user->id === $employee->company_id;
         }
 
         return false;
