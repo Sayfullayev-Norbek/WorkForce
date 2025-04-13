@@ -31,7 +31,7 @@ class CompanyController extends Controller
         try {
             $result = $this->companyService->getAllCompanies();
 
-            return $this->response(CompanyResource::collection($result), 201);
+            return $this->response(CompanyResource::collection($result), 200);
         } catch (Exception $exception) {
             return $this->error($exception->getMessage(), $exception->getCode());
         }
@@ -46,7 +46,7 @@ class CompanyController extends Controller
         try {
             $result = $this->companyService->getCompany($id);
 
-            return $this->response(new CompanyResource($result), 201);
+            return $this->response(new CompanyResource($result), 200);
         } catch (Exception $exception) {
             return $this->error($exception->getMessage(), $exception->getCode());
         }
@@ -61,7 +61,7 @@ class CompanyController extends Controller
         try {
             $result = $this->companyService->createCompany($request->validated());
 
-            return $this->response(new CompanyResource($result), 201);
+            return $this->response(new CompanyResource($result), 200);
         } catch (Exception $exception) {
             return $this->error($exception->getMessage(), $exception->getCode());
         }
@@ -77,7 +77,7 @@ class CompanyController extends Controller
         try {
             $result = $this->companyService->updateCompany($id, $request->validated());
 
-            return $this->response(new CompanyResource($result), 201);
+            return $this->response(new CompanyResource($result), 200);
         } catch (Exception $exception) {
             return $this->error($exception->getMessage(), $exception->getCode());
         }
@@ -92,7 +92,7 @@ class CompanyController extends Controller
         try {
             $this->companyService->deleteCompany($id);
 
-            return $this->success('Destroy',null, 201);
+            return $this->success('Destroy',null, 200);
         } catch (Exception $exception) {
             return $this->error($exception->getMessage(), $exception->getCode());
         }
