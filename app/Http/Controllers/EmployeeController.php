@@ -91,7 +91,7 @@ class EmployeeController extends Controller
     public function destroy(int $id): JsonResponse
     {
         try {
-            this->employeeService->deleteEmployee($id);
+            $this->employeeService->deleteEmployee($id);
 
             return $this->success('Destroy',null, 200);
         } catch (Exception $exception) {
