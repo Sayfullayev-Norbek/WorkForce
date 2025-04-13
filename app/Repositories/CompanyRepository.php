@@ -24,7 +24,7 @@ class CompanyRepository implements CompanyRepositoryInterface
      */
     public function find(int $id): Model|Collection|Company|null
     {
-        return Company::query()->findOrFail($id);
+        return Company::query()->with('employees')->findOrFail($id);
     }
 
     /**

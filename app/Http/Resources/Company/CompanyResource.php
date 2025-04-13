@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Company;
 
+use App\Http\Resources\Employee\EmployeeResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -26,6 +27,7 @@ class CompanyResource extends JsonResource
             'website' => $this->website,
             'phone' => $this->phone,
             'email' => $this->email,
+            'employees'    => EmployeeResource::collection($this->whenLoaded('employees')),
         ];
     }
 }
