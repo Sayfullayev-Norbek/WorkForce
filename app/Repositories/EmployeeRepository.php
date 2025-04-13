@@ -33,6 +33,8 @@ class EmployeeRepository implements EmployeeRepositoryInterface
      */
     public function create(array $data): Model|Employee
     {
+        $data['company_id'] = auth()->user()->id;
+
         return Employee::query()->create($data);
     }
 

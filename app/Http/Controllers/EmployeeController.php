@@ -35,9 +35,9 @@ class EmployeeController extends Controller
      * @param StoreEmployeeRequest $request
      * @return JsonResponse
      */
-    public function create(StoreEmployeeRequest $request): JsonResponse
+    public function store(StoreEmployeeRequest $request): JsonResponse
     {
-        $employee = $this->employeeService->createEmployee((array) $request->all());
+        $employee = $this->employeeService->createEmployee($request->validated());
         return response()->json($employee, 201);
     }
 
