@@ -20,10 +20,10 @@ return new class extends Migration
             $table->string('position');
             $table->string('phone')->unique();
 
-            $table->string('address');
-            $table->string('latitude')->unique();
-            $table->string('longitude')->unique();
-            $table->integer('zoom_level');
+            $table->string('address')->nullable();
+            $table->string('latitude')->unique()->nullable();
+            $table->string('longitude')->unique()->nullable();
+            $table->integer('zoom_level')->nullable();
 
             $table->foreignId('company_id')->constrained()->onDelete('cascade');
             $table->timestamps();

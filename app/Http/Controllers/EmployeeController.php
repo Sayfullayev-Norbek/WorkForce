@@ -6,62 +6,44 @@ use App\Models\Employee;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
+use App\Services\EmployeeService;
 
 class EmployeeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $employeeService;
+
+    public function __construct(EmployeeService $employeeService)
+    {
+        $this->employeeService = $employeeService;
+    }
+
     public function index()
     {
-        //
+        $employees = $this->employeeService->getAllEmployees();
+        return response()->json($employees);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(StoreEmployeeRequest $request)
     {
-        //
+        $employee = $this->employeeService->createEmployee((array) $request->all());
+        return response()->json($employee, 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreEmployeeRequest $request)
+    public function show($id)
     {
-        //
+        $employee = $this->employeeService->getEmployee($id);
+        return response()->json($employee);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Employee $employee)
+    public function update(UpdateEmployeeRequest $request, $id)
     {
-        //
+        $employee = $this->employeeService->updateEmployee($id, $request->all());
+        return response()->json($employee);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Employee $employee)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateEmployeeRequest $request, Employee $employee)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Employee $employee)
-    {
-        //
+        $this->employeeService->deleteEmployee($id);
+        return response()->json(null, 204);
     }
 }

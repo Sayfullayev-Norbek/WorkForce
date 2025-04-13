@@ -11,7 +11,7 @@ class UpdateCompanyRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,18 @@ class UpdateCompanyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'company_name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email',
+            'first_name' => 'sometimes|string|max:255',
+            'last_name' => 'sometimes|string|max:255',
+            'middle_name' => 'sometimes|string|max:255',
+            'password' => 'required|min:8|confirmed',
+            'address' => 'sometimes|string|max:255',
+            'latitude' => 'sometimes|string',
+            'longitude' => 'sometimes|string',
+            'zoom_level' => 'sometimes|integer',
+            'website' => 'sometimes|url',
+            'phone' => 'sometimes|string|max:15',
         ];
     }
 }

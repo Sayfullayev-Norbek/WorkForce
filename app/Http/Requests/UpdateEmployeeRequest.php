@@ -11,7 +11,7 @@ class UpdateEmployeeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,17 @@ class UpdateEmployeeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'passport_number' => ['nullable', 'string'],
+            'last_name'       => 'nullable|string|max:255',
+            'first_name'      => 'nullable|string|max:255',
+            'middle_name'     => 'nullable|string|max:255',
+            'position'        => 'nullable|string|max:255',
+            'phone'           => ['nullable', 'string'],
+            'address'         => 'nullable|string',
+            'latitude'        => ['nullable', 'string'],
+            'longitude'       => ['nullable', 'string'],
+            'zoom_level'      => 'nullable|integer',
+            'company_id'      => 'nullable|exists:companies,id',
         ];
     }
 }

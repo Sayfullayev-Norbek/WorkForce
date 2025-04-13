@@ -4,63 +4,45 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Companies\StoreCompanyRequest;
 use App\Http\Requests\Companies\UpdateCompanyRequest;
-use App\Models\Company;
+use App\Services\CompanyService;
 
 class CompanyController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $companyService;
+
+    public function __construct(CompanyService $companyService)
+    {
+        $this->companyService = $companyService;
+    }
+
     public function index()
     {
-        //
+        return response()->json($this->companyService->getAllCompanies());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show(int $id)
     {
-        //
+        return response()->json($this->companyService->getCompany($id));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreCompanyRequest $request)
     {
-        //
+        $company = $this->companyService->createCompany((array)$request);
+
+        return response()->json($company, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Company $company)
+    public function update(UpdateCompanyRequest $request, int $id)
     {
-        //
+        $company = $this->companyService->updateCompany($id, (array)$request);
+
+        return response()->json($company);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Company $company)
+    public function destroy(int $id)
     {
-        //
-    }
+        $this->companyService->deleteCompany($id);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCompanyRequest $request, Company $company)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Company $company)
-    {
-        //
+        return response()->json(null, 204);
     }
 }
