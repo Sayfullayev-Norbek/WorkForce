@@ -5,9 +5,12 @@ namespace App\Policies;
 use App\Models\Admin;
 use App\Models\Company;
 use App\Models\Employee;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class EmployeePolicy
 {
+    use HandlesAuthorization;
+
     public function viewAny($user, Employee $employee): bool
     {
         if ($user instanceof Admin) {

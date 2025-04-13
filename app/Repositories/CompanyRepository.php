@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Interfaces\CompanyRepositoryInterface;
+use App\Models\Admin;
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -11,11 +12,21 @@ use Illuminate\Support\Facades\Hash;
 class CompanyRepository implements CompanyRepositoryInterface
 {
     /**
-     * @return Collection
+     * @return \Illuminate\Support\Collection
      */
-    public function all(): Collection
+    public function all(): \Illuminate\Support\Collection
     {
-        return Company::query()->with('employees')->get();
+        $user = auth()->user();
+
+        if ($user instanceof Admin) {
+            return Company::with('employees')->get();
+        }
+
+        if ($user instanceof Company) {
+            return Company::where('id', $user->id)->with('employees')->get();
+        }
+
+        return collect();
     }
 
     /**
@@ -24,7 +35,17 @@ class CompanyRepository implements CompanyRepositoryInterface
      */
     public function find(int $id): Model|Collection|Company|null
     {
-        return Company::query()->with('employees')->findOrFail($id);
+        $user = auth()->user();
+
+        if ($user instanceof Admin){
+            Company::query()->with('employees')->findOrFail($id);
+        }
+
+        if ($user instanceof Company) {
+            return Company::query()->where('id', $user->id)->with('employees')->findOrFail($id);
+        }
+
+        return null;
     }
 
     /**

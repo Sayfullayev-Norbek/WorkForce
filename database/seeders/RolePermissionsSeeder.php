@@ -26,7 +26,10 @@ class RolePermissionsSeeder extends Seeder
                 'guard_name' => 'company'
             ]);
 
-        $employee = Role::query()->create(['name' => 'employee']);
+        $employee = Role::query()->create([
+            'name' => 'employee',
+            'guard_name' => 'company',
+        ]);
 
 
         $permissions = [
@@ -62,7 +65,6 @@ class RolePermissionsSeeder extends Seeder
             'company:update',
             'company:view',
             'company:view-any',
-
             'employee:view',
             'employee:view-any',
         ]);
@@ -73,12 +75,16 @@ class RolePermissionsSeeder extends Seeder
             'employee:update',
             'employee:view',
             'employee:view-any',
-
             'company:update',
             'company:view',
             'company:delete',
             'company:create',
             'company:view-any',
+        ]);
+
+        $employee->givePermissionTo([
+            'employee:view',
+            'employee:view-any',
         ]);
     }
 }
